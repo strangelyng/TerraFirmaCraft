@@ -12,6 +12,7 @@
     "tfc:mule",
     "tfc:donkey",
     "tfc:camel",
+    "tfc:bactrian_camel",
     "tfc:goat"
   ]
 }

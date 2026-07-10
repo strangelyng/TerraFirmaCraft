@@ -2045,6 +2045,7 @@ LAND_CREATURES: Dict[str, Dict[str, Any]] = {
     'donkey': spawner('tfc:donkey', min_count=1, max_count=3),
     'horse': spawner('tfc:horse', min_count=1, max_count=3),
     'camel': spawner('tfc:camel', min_count=1, max_count=3),
+    'bactrian_camel': spawner('tfc:bactrian_camel', min_count=1, max_count=3),
     'ocelot': spawner('tfc:ocelot', min_count=1, max_count=3),
     'frog': spawner('tfc:frog', min_count=2, max_count=4),
 }

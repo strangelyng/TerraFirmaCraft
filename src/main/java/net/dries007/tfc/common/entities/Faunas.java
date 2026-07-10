@@ -41,6 +41,7 @@ import net.dries007.tfc.common.entities.livestock.DairyAnimal;
 import net.dries007.tfc.common.entities.livestock.Mammal;
 import net.dries007.tfc.common.entities.livestock.OviparousAnimal;
 import net.dries007.tfc.common.entities.livestock.WoolyAnimal;
+import net.dries007.tfc.common.entities.livestock.camel.BactrianCamel;
 import net.dries007.tfc.common.entities.livestock.camel.TFCCamel;
 import net.dries007.tfc.common.entities.livestock.horse.TFCDonkey;
 import net.dries007.tfc.common.entities.livestock.horse.TFCHorse;
@@ -123,6 +124,7 @@ public class Faunas
     public static final Id<TFCMule> MULE = registerAnimal(TFCEntities.MULE);
     public static final Id<TFCHorse> HORSE = registerAnimal(TFCEntities.HORSE);
     public static final Id<TFCCamel> CAMEL = registerAnimal(TFCEntities.CAMEL);
+    public static final Id<BactrianCamel> BACTRIAN_CAMEL = registerAnimal(TFCEntities.BACTRIAN_CAMEL);
 
     public static void registerSpawnPlacements(RegisterSpawnPlacementsEvent event)
     {
@@ -183,6 +185,7 @@ public class Faunas
         registerSpawnPlacement(event, MULE);
         registerSpawnPlacement(event, HORSE);
         registerSpawnPlacement(event, CAMEL);
+        registerSpawnPlacement(event, BACTRIAN_CAMEL);
         registerSpawnPlacement(event, WOLF);
         registerSpawnPlacement(event, HYENA);
         registerSpawnPlacement(event, DIREWOLF);

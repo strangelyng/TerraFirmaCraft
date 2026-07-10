@@ -70,17 +70,16 @@ public class TFCCamelAi
         MemoryModuleType.GAZE_COOLDOWN_TICKS
     );
 
-    public static Brain.Provider<TFCCamel> brainProvider()
+    public static Brain.Provider<AbstractCamel> brainProvider()
     {
         return Brain.provider(MEMORY_TYPES, SENSOR_TYPES);
     }
 
-    @SuppressWarnings("unchecked")
-    public static Brain<?> makeBrain(Brain<? extends Camel> brain)
+    public static Brain<?> makeBrain(Brain<? extends AbstractCamel> brain)
     {
-        initCoreActivity((Brain<TFCCamel>) brain);
-        initIdleActivity((Brain<TFCCamel>) brain);
-        initRetreatActivity((Brain<TFCCamel>) brain);
+        initCoreActivity(brain);
+        initIdleActivity(brain);
+        initRetreatActivity(brain);
 
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setDefaultActivity(Activity.IDLE);
@@ -89,7 +88,7 @@ public class TFCCamelAi
         return brain;
     }
 
-    private static void initCoreActivity(Brain<TFCCamel> brain)
+    private static void initCoreActivity(Brain<? extends AbstractCamel> brain)
     {
         brain.addActivity(Activity.CORE, 0, ImmutableList.of(
             new Swim(0.8F),
@@ -100,7 +99,7 @@ public class TFCCamelAi
         ));
     }
 
-    public static void initIdleActivity(Brain<TFCCamel> brain)
+    public static void initIdleActivity(Brain<? extends AbstractCamel> brain)
     {
         brain.addActivity(Activity.IDLE, 0, ImmutableList.of(
             SetEntityLookTargetSometimes.create(EntityType.PLAYER, 6.0F, UniformInt.of(30, 60)),
@@ -114,7 +113,7 @@ public class TFCCamelAi
         ));
     }
 
-    public static RunOne<TFCCamel> createIdleMovementBehaviors() {
+    public static RunOne<AbstractCamel> createIdleMovementBehaviors() {
         return new RunOne<>(
             ImmutableMap.of(MemoryModuleType.WALK_TARGET, MemoryStatus.VALUE_ABSENT),
             ImmutableList.of(
@@ -126,7 +125,7 @@ public class TFCCamelAi
         );
     }
 
-    public static void initRetreatActivity(Brain<TFCCamel> brain)
+    public static void initRetreatActivity(Brain<? extends AbstractCamel> brain)
     {
         brain.addActivityAndRemoveMemoryWhenStopped(Activity.AVOID, 10, ImmutableList.of(
             SetWalkTargetAwayFrom.entity(MemoryModuleType.AVOID_TARGET, 2.6F, 15, false),
@@ -145,7 +144,7 @@ public class TFCCamelAi
         );
     }
 
-    public static void updateActivity(TFCCamel camel)
+    public static void updateActivity(AbstractCamel camel)
     {
         camel.getBrain().setActiveActivityToFirstValid(ImmutableList.of(Activity.AVOID, Activity.IDLE));
     }

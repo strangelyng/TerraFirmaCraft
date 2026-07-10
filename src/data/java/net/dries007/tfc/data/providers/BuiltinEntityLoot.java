@@ -14,7 +14,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
@@ -169,6 +168,7 @@ public class BuiltinEntityLoot extends EntityLootSubProvider
         add(TFCEntities.ALPACA.get(), livestockWool(Food.CAMELIDAE, 6, 10, 16, Size.MEDIUM, 4));
         add(TFCEntities.SHEEP.get(), livestockWool(Food.MUTTON, 4, 12, 18, Size.SMALL, 4));
         add(TFCEntities.MUSK_OX.get(), livestockWool(Food.MUTTON, 6, 13, 19, Size.LARGE, 4));
+        add(TFCEntities.BACTRIAN_CAMEL.get(), livestockWool(Food.CAMELIDAE, 6, 13, 19, Size.LARGE, 4));
 
         // Poultry
         add(TFCEntities.CHICKEN.get(), poultry(Food.CHICKEN, 2, 1, 6, 4, 12));

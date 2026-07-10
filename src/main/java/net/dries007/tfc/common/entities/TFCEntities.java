@@ -56,6 +56,7 @@ import net.dries007.tfc.common.entities.livestock.DairyAnimal;
 import net.dries007.tfc.common.entities.livestock.Mammal;
 import net.dries007.tfc.common.entities.livestock.OviparousAnimal;
 import net.dries007.tfc.common.entities.livestock.WoolyAnimal;
+import net.dries007.tfc.common.entities.livestock.camel.BactrianCamel;
 import net.dries007.tfc.common.entities.livestock.camel.TFCCamel;
 import net.dries007.tfc.common.entities.livestock.horse.TFCDonkey;
 import net.dries007.tfc.common.entities.livestock.horse.TFCHorse;
@@ -212,6 +213,7 @@ public class TFCEntities
     public static final Id<TFCHorse> HORSE = register("horse", EntityType.Builder.<TFCHorse>of(TFCHorse::new, MobCategory.CREATURE).sized(1.3964844F, 1.6F).eyeHeight(1.52F).passengerAttachments(1.44375F).clientTrackingRange(10));
 
     public static final Id<TFCCamel> CAMEL = register("camel", EntityType.Builder.of(TFCEntities::makeCamel, MobCategory.CREATURE).sized(1.7f, 2.375f).eyeHeight(2.275f).clientTrackingRange(10));
+    public static final Id<BactrianCamel> BACTRIAN_CAMEL = register("bactrian_camel", EntityType.Builder.of(TFCEntities::makeBactrianCamel, MobCategory.CREATURE).sized(1.7f, 2.375f).eyeHeight(2.275f).clientTrackingRange(10));
 
     public static final Id<TFCCat> CAT = register("cat", EntityType.Builder.of(TFCCat::new, MobCategory.CREATURE).sized(0.6F, 0.7F).eyeHeight(0.35F).clientTrackingRange(8));
     public static final Id<Dog> DOG = register("dog", EntityType.Builder.of(Dog::new, MobCategory.CREATURE).sized(0.6F, 0.85F).eyeHeight(0.68F).clientTrackingRange(10));
@@ -294,6 +296,7 @@ public class TFCEntities
         event.put(DONKEY.get(), AbstractChestedHorse.createBaseChestedHorseAttributes().build());
         event.put(HORSE.get(), AbstractHorse.createBaseHorseAttributes().build());
         event.put(CAMEL.get(), TFCCamel.createAttributes().build());
+        event.put(BACTRIAN_CAMEL.get(), TFCCamel.createAttributes().build());
         event.put(CAT.get(), TFCCat.createAttributes().build());
         event.put(DOG.get(), Dog.createAttributes().build());
         event.put(PANDA.get(), TFCPanda.createAttributes().add(Attributes.STEP_HEIGHT, 1.0F).build());
@@ -371,6 +374,11 @@ public class TFCEntities
                 return TFCTags.Items.SHEEP_FOOD;
             }
         };
+    }
+
+    public static BactrianCamel makeBactrianCamel(EntityType<? extends Camel> animal, Level level)
+    {
+        return new BactrianCamel(animal, level, TFCConfig.SERVER.bactrianCamelConfig);
     }
 
     public static WoolyAnimal makeMuskOx(EntityType<? extends WoolyAnimal> animal, Level level)

@@ -9,8 +9,6 @@ package net.dries007.tfc.common.entities.livestock.camel;
 import com.mojang.serialization.Dynamic;
 
 import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.entities.TFCEntities;
-import net.dries007.tfc.common.entities.Temptable;
 import net.dries007.tfc.common.entities.ai.TFCGroundPathNavigation;
 import net.dries007.tfc.common.entities.livestock.Age;
 import net.dries007.tfc.common.entities.livestock.CommonAnimalData;
@@ -56,7 +54,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
-public class TFCCamel extends Camel implements HorseProperties, Temptable
+public class TFCCamel extends AbstractCamel implements HorseProperties
 {
     public static AttributeSupplier.Builder createAttributes()
     {
@@ -82,15 +80,9 @@ public class TFCCamel extends Camel implements HorseProperties, Temptable
     }
 
     @Override
-    protected Brain.Provider<Camel> brainProvider()
-    {
-        return Brain.provider(TFCCamelAi.MEMORY_TYPES, TFCCamelAi.SENSOR_TYPES);
-    }
-
-    @Override
     protected Brain<?> makeBrain(Dynamic<?> dynamic)
     {
-        return TFCCamelAi.makeBrain(brainProvider().makeBrain(dynamic));
+        return TFCCamelAi.makeBrain(TFCCamelAi.brainProvider().makeBrain(dynamic));
     }
 
     @Override
@@ -109,17 +101,6 @@ public class TFCCamel extends Camel implements HorseProperties, Temptable
     public TagKey<Item> getFoodTag()
     {
         return TFCTags.Items.CAMEL_FOOD;
-    }
-
-    @Override
-    protected void registerGoals()
-    {
-    }
-
-    @Override
-    public EntityType<?> getEntityTypeForBaby()
-    {
-        return TFCEntities.CAMEL.get();
     }
 
     @Override
@@ -152,7 +133,7 @@ public class TFCCamel extends Camel implements HorseProperties, Temptable
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand)
     {
-        InteractionResult result = HorseProperties.super.mobInteract(player, hand);
+        InteractionResult result = super.mobInteract(player, hand);
         if (result == InteractionResult.PASS)
         {
             ItemStack stack = player.getItemInHand(hand);
@@ -365,12 +346,6 @@ public class TFCCamel extends Camel implements HorseProperties, Temptable
     }
 
     @Override
-    public boolean isFood(ItemStack stack)
-    {
-        return HorseProperties.super.isFood(stack);
-    }
-
-    @Override
     protected SoundEvent getAmbientSound()
     {
         return super.getAmbientSound();
@@ -403,7 +378,7 @@ public class TFCCamel extends Camel implements HorseProperties, Temptable
     @Override
     public boolean isInvulnerableTo(DamageSource src)
     {
-        return src.is(DamageTypes.CACTUS) ? true : super.isInvulnerableTo(src);
+        return src.is(DamageTypes.CACTUS) || super.isInvulnerableTo(src);
     }
 
     @Override
