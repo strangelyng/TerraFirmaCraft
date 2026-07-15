@@ -291,16 +291,16 @@
     },
     {
       "type": "patchouli:text",
-      "anchor": "camel",
-      "text": "$(thing)Camels$() spawn in drier climates, with $(l:the_world/climate#temperature)temperature$() of at least -5°C, and at most 100mm of $(l:the_world/climate#rainfall)rainfall$(). They are $(l:mechanics/animal_husbandry#mammals)Mammals$() that can be ridden. They eat $(thing)grains$() and $(thing)fruits$(). They have 1 child, are pregnant for 19 days, and reach adulthood in 80 days. They can have children 6 times.",
-      "title": "Camels"
+      "anchor": "dromedary_camel",
+      "text": "$(thing)Dromedary Camels$() spawn in drier climates, with $(l:the_world/climate#temperature)temperature$() of at least -5°C, and at most 100mm of $(l:the_world/climate#rainfall)rainfall$(). They are $(l:mechanics/animal_husbandry#mammals)Mammals$() that can be ridden. They eat $(thing)grains$() and $(thing)fruits$(). They have 1 child, are pregnant for 19 days, and reach adulthood in 80 days. They can have children 6 times.",
+      "title": "Dromedary Camels"
     },
     {
       "type": "patchouli:entity",
       "entity": "tfc:camel{NoAI:1b,birth:-100000000L,oldDay:9223372036854775807L,geneticSize:16}",
       "scale": 0.75,
       "name": " ",
-      "text": "A camel."
+      "text": "A dromedary camel."
     },
     {
       "type": "patchouli:text",
