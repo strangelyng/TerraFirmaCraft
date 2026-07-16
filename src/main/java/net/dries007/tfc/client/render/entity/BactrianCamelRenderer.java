@@ -9,25 +9,34 @@ import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.model.entity.HierarchicalAnimatedModel;
 import net.dries007.tfc.common.entities.livestock.Age;
 import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
+import net.dries007.tfc.common.entities.livestock.camel.AbstractCamel;
 
 public class BactrianCamelRenderer<T extends Camel, M extends HierarchicalAnimatedModel<T>> extends MobRenderer<T, M>
 {
     private final ResourceLocation young;
     private final ResourceLocation old;
+    private final ResourceLocation saddled;
+    private final ResourceLocation old_saddled;
 
     public BactrianCamelRenderer(EntityRendererProvider.Context ctx, M model, float shadow)
     {
         super(ctx, model, shadow);
         this.young = RenderHelpers.animalTexture("bactrian_camel_young");
         this.old = RenderHelpers.animalTexture("bactrian_camel_old");
+        this.saddled = RenderHelpers.animalTexture("bactrian_camel_saddle");
+        this.old_saddled = RenderHelpers.animalTexture("bactrian_camel_old_saddle");
     }
 
     @Override
     public ResourceLocation getTextureLocation(T entity)
     {
-        if (entity instanceof TFCAnimalProperties animal) {
-            return animal.getAgeType() == Age.OLD ? old : young;
+        if (entity instanceof AbstractCamel camel) {
+            if (camel.isSaddled())
+            {
+                return camel.getAgeType() == Age.OLD ? old_saddled : saddled;
+            }
+            else return camel.getAgeType() == Age.OLD ? old : young;
         }
-        else return RenderHelpers.animalTexture("bactrian_camel_young");
+        else return young;
     }
 }

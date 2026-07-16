@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -32,6 +33,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
@@ -45,6 +47,7 @@ import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.config.animals.AnimalConfig;
 import net.dries007.tfc.config.animals.MammalConfig;
 import net.dries007.tfc.config.animals.ProducingMammalConfig;
+import net.dries007.tfc.mixin.accessor.CamelAccessor;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.events.AnimalProductEvent;
 
@@ -186,6 +189,20 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
         if (result == InteractionResult.PASS)
         {
             ItemStack stack = player.getItemInHand(hand);
+            if (!this.isBaby())
+            {
+                if (this.isTamed() && player.isSecondaryUseActive())
+                {
+                    this.openCustomInventoryScreen(player);
+                    return InteractionResult.sidedSuccess(this.level().isClientSide);
+                }
+
+                if (this.isVehicle())
+                {
+                    return InteractionResult.PASS;
+                }
+            }
+
             if (!stack.isEmpty())
             {
                 InteractionResult res = stack.interactLivingEntity(player, this, hand);
@@ -200,25 +217,40 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
                     return InteractionResult.sidedSuccess(this.level().isClientSide);
                 }
 
-                if (this.isBodyArmorItem(stack) || stack.is(Items.SADDLE))
+                final boolean canBeSaddled = !this.isBaby() && !this.isSaddled() && stack.is(Items.SADDLE);
+                if (this.isBodyArmorItem(stack) || canBeSaddled)
                 {
-                    return InteractionResult.PASS;
+                    this.openCustomInventoryScreen(player);
+                    return InteractionResult.sidedSuccess(this.level().isClientSide);
                 }
+            }
 
-                if (this.isBaby())
+            if (this.isBaby())
+            {
+                return InteractionResult.PASS;
+            }
+            else
+            {
+                if (isTamed() && getOwnerUUID() == null)
                 {
-                    return InteractionResult.PASS;
+                    tameWithName(player);
                 }
-                else return InteractionResult.sidedSuccess(this.level().isClientSide);
+                if (this.getPassengers().size() <= 1)
+                {
+                    this.doPlayerRide(player);
+                }
+                return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
         }
         return result;
     }
 
     @Override
-    protected boolean canAddPassenger(Entity passenger)
+    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick)
     {
-        return false;
+        float f = -0.1F;
+        float f1 = (float) (this.isRemoved() ? 0.01F : ((CamelAccessor) this).invoke$getBodyAnchorAnimationYOffset(true, 0.0F, dimensions, partialTick));
+        return new Vec3(0.0, (double) f1, (double) (f * partialTick)).yRot(-this.getYRot() * (float) (Math.PI / 180.0));
     }
 
     @Override
@@ -340,12 +372,6 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
         {
             tickAnimalData();
         }
-    }
-
-    @Override
-    public boolean isSaddleable()
-    {
-        return false;
     }
 
     @Override

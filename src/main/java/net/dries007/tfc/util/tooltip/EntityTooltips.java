@@ -27,6 +27,7 @@ import net.dries007.tfc.common.entities.livestock.MammalProperties;
 import net.dries007.tfc.common.entities.livestock.TFCAnimal;
 import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.entities.livestock.camel.AbstractCamel;
+import net.dries007.tfc.common.entities.livestock.camel.BactrianCamel;
 import net.dries007.tfc.common.entities.livestock.horse.HorseProperties;
 import net.dries007.tfc.common.entities.livestock.horse.TFCChestedHorse;
 import net.dries007.tfc.common.entities.livestock.horse.TFCHorse;
@@ -163,6 +164,13 @@ public final class EntityTooltips
                     component.append(", ").append(Tooltips.fluidUnitsOf(fluidHandler.getFluidInTank(0)));
                 }
                 tooltip.accept(component);
+            }
+        }
+        if (entity instanceof BactrianCamel camel)
+        {
+            if (camel.isTamed())
+            {
+                tooltip.accept(Component.translatable("tfc.jade.may_ride_horse"));
             }
         }
     };
