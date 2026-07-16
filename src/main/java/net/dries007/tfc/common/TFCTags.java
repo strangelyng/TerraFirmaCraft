@@ -710,6 +710,7 @@ public class TFCTags
         public static final TagKey<EntityType<?>> PETS = tag("pets");
         public static final TagKey<EntityType<?>> FARM_ANIMALS = tag("farm_animals");
         public static final TagKey<EntityType<?>> ANIMALS = tag("animals");
+        public static final TagKey<EntityType<?>> IGNORES_SNOW = tag("ignores_snow");
 
         // ===== Data Generated ====== //
 

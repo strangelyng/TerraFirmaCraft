@@ -12,7 +12,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -46,7 +45,6 @@ import net.dries007.tfc.common.entities.livestock.Age;
 import net.dries007.tfc.common.entities.livestock.CommonAnimalData;
 import net.dries007.tfc.common.entities.livestock.MammalProperties;
 import net.dries007.tfc.common.items.TFCItems;
-import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.config.animals.AnimalConfig;
 import net.dries007.tfc.config.animals.MammalConfig;
 import net.dries007.tfc.config.animals.ProducingMammalConfig;
@@ -284,15 +282,7 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
     @Override
     protected float getBlockSpeedFactor()
     {
-        if (TFCConfig.SERVER.enableSnowSlowEntities.get() && level().getBlockState(BlockPos.containing(position())).is(BlockTags.SNOW))
-        {
-            /*
-             * TODO: TEST MORE CASES, SEE IF THERE IS A BETTER WAY TO DO THIS
-             * This has to use an unusual value because SnowLayerBlocks use a different method for slowing entities
-             */
-            return 1.8F;
-        }
-        return Helpers.isBlock(level().getBlockState(blockPosition().below()), Tags.Blocks.SANDS) ? 1.2F : super.getBlockSpeedFactor();
+        return Helpers.isBlock(level().getBlockState(blockPosition().below()), Tags.Blocks.SANDS) ? 1.15F : super.getBlockSpeedFactor();
     }
 
     @Override

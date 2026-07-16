@@ -334,5 +334,8 @@ public class BuiltinEntityTags extends EntityTypeTagsProvider
             .addTags(BUBBLE_COLUMN_IMMUNE, PESTS, BIRD_PREY)
             .add(TFCEntities.FROG.get());
 
+        tag(IGNORES_SNOW)
+            .add(TFCEntities.BACTRIAN_CAMEL.get());
+
     }
 }
