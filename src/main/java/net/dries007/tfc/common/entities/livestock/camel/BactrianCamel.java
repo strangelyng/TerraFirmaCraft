@@ -22,6 +22,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.camel.Camel;
@@ -34,7 +35,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.TFCTags;
@@ -48,7 +48,6 @@ import net.dries007.tfc.config.animals.AnimalConfig;
 import net.dries007.tfc.config.animals.MammalConfig;
 import net.dries007.tfc.config.animals.ProducingMammalConfig;
 import net.dries007.tfc.mixin.accessor.CamelAccessor;
-import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.events.AnimalProductEvent;
 
@@ -386,20 +385,19 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
         }
     }
 
+    // A sprinting Bactrian Camel is a bit faster than a sprinting player (0.13 vs 0.14)
+    @Override
+    protected float getRiddenSpeed(Player player)
+    {
+        float sprintSpeedBonus = 0.05F;
+        float f = player.isSprinting() && this.getJumpCooldown() == 0 ? sprintSpeedBonus : 0.0F;
+        return (float) this.getAttributeValue(Attributes.MOVEMENT_SPEED) + f;
+    }
+
     @Override
     public float getWalkTargetValue(BlockPos pos, LevelReader level)
     {
         return level.getBlockState(pos.below()).is(TFCTags.Blocks.BUSH_PLANTABLE_ON) ? 10.0F : level.getPathfindingCostFromLightLevels(pos);
-    }
-
-    @Override
-    protected float getBlockSpeedFactor()
-    {
-        if ((Helpers.isBlock(level().getBlockState(blockPosition().below()), Tags.Blocks.SANDS)))
-        {
-            return 1.15F;
-        }
-        else return super.getBlockSpeedFactor();
     }
 
     @Override

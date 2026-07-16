@@ -207,6 +207,8 @@ public class TFCTags
         public static final TagKey<Block> FOX_RAIDABLE = tag("fox_raidable");
         /** Pets like to troll their owners and sit on inconvenient blocks. */
         public static final TagKey<Block> PET_SITS_ON = tag("pet_sits_on");
+        /** Camels gain a speed boost on dry blocks. */
+        public static final TagKey<Block> CAMEL_FASTER_ON = tag("camel_faster_on");
         /**
          * In TFC, by default, monsters only spawn on natural blocks. This is to prevent the unfortunate case where a house is built with
          * torches, which may go out, creating accidental mob farms. In general, we don't want hostile mobs spawning elsewhere than underground
