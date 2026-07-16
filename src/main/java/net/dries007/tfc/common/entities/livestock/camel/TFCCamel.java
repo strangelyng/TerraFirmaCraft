@@ -25,8 +25,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -42,15 +40,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.camel.Camel;
-import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,12 +93,6 @@ public class TFCCamel extends AbstractCamel implements HorseProperties
     }
 
     @Override
-    public TagKey<Item> getFoodTag()
-    {
-        return TFCTags.Items.CAMEL_FOOD;
-    }
-
-    @Override
     public void setInLove(@Nullable Player player) {} // nobody could love a camel
 
     @Override
@@ -124,10 +113,6 @@ public class TFCCamel extends AbstractCamel implements HorseProperties
             return vanillaParentingCheck(this) && vanillaParentingCheck(otherCamel);
         }
         return false;
-    }
-
-    public boolean vanillaParentingCheck(AbstractHorse camel) {
-        return !camel.isVehicle() && !camel.isPassenger();
     }
 
     @Override
@@ -183,7 +168,7 @@ public class TFCCamel extends AbstractCamel implements HorseProperties
                 {
                     tameWithName(player);
                 }
-                if (this.getPassengers().size() < 2)
+                if (canAddPassenger(player))
                 {
                     this.doPlayerRide(player);
                 }
@@ -197,22 +182,6 @@ public class TFCCamel extends AbstractCamel implements HorseProperties
     public boolean isTamed()
     {
         return getFamiliarity() > TAMED_FAMILIARITY;
-    }
-
-    @Override
-    protected @Nullable SoundEvent getEatingSound()
-    {
-        return super.getEatingSound();
-    }
-
-    @Override
-    protected float getBlockSpeedFactor()
-    {
-        if ((Helpers.isBlock(level().getBlockState(blockPosition().below()), Tags.Blocks.SANDS)))
-        {
-            return 1.25F;
-        }
-        else return Helpers.isBlock(level().getBlockState(blockPosition()), TFCTags.Blocks.ANIMAL_IGNORED_PLANTS) ? 1.0F : super.getBlockSpeedFactor();
     }
 
     @Override
@@ -246,27 +215,27 @@ public class TFCCamel extends AbstractCamel implements HorseProperties
     }
 
     @Override
-    public void setGenes(@Nullable CompoundTag tag)
-    {
-        genes = tag;
-    }
-
-    @Override
     public @Nullable CompoundTag getGenes()
     {
         return genes;
     }
 
     @Override
-    public AnimalConfig animalConfig()
+    public void setGenes(@Nullable CompoundTag tag)
     {
-        return config;
+        genes = tag;
     }
 
     @Override
     public CommonAnimalData animalData()
     {
         return ANIMAL_DATA;
+    }
+
+    @Override
+    public AnimalConfig animalConfig()
+    {
+        return config;
     }
 
     @Override
@@ -346,27 +315,9 @@ public class TFCCamel extends AbstractCamel implements HorseProperties
     }
 
     @Override
-    protected SoundEvent getAmbientSound()
+    public boolean isInvulnerableTo(DamageSource src)
     {
-        return super.getAmbientSound();
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource src)
-    {
-        return super.getHurtSound(src);
-    }
-
-    @Override
-    protected SoundEvent getDeathSound()
-    {
-        return super.getDeathSound();
-    }
-
-    @Override
-    protected void playStepSound(BlockPos pos, BlockState block)
-    {
-        super.playStepSound(pos, block);
+        return src.is(DamageTypes.CACTUS) || super.isInvulnerableTo(src);
     }
 
     @Override
@@ -376,9 +327,13 @@ public class TFCCamel extends AbstractCamel implements HorseProperties
     }
 
     @Override
-    public boolean isInvulnerableTo(DamageSource src)
+    protected float getBlockSpeedFactor()
     {
-        return src.is(DamageTypes.CACTUS) || super.isInvulnerableTo(src);
+        if ((Helpers.isBlock(level().getBlockState(blockPosition().below()), Tags.Blocks.SANDS)))
+        {
+            return 1.15F;
+        }
+        else return super.getBlockSpeedFactor();
     }
 
     @Override

@@ -12,7 +12,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,7 +26,6 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -44,6 +42,7 @@ import net.dries007.tfc.common.entities.ai.TFCGroundPathNavigation;
 import net.dries007.tfc.common.entities.livestock.Age;
 import net.dries007.tfc.common.entities.livestock.CommonAnimalData;
 import net.dries007.tfc.common.entities.livestock.MammalProperties;
+import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.items.TFCItems;
 import net.dries007.tfc.config.animals.AnimalConfig;
 import net.dries007.tfc.config.animals.MammalConfig;
@@ -151,28 +150,6 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt)
-    {
-        super.addAdditionalSaveData(nbt);
-        saveCommonAnimalData(nbt);
-        nbt.putLong("produced", getProducedTick());
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag nbt)
-    {
-        super.readAdditionalSaveData(nbt);
-        readCommonAnimalData(nbt);
-        setProducedTick(nbt.getLong("produced"));
-    }
-
-    @Override
-    public TagKey<Item> getFoodTag()
-    {
-        return TFCTags.Items.CAMEL_FOOD;
-    }
-
-    @Override
     public void setInLove(@Nullable Player player) {}
 
     @Override
@@ -181,7 +158,18 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
         if (otherAnimal.getClass() != this.getClass()) return false;
         BactrianCamel other = (BactrianCamel) otherAnimal;
         return this.getGender() != other.getGender()
-            && this.isReadyToMate() && other.isReadyToMate();
+            && this.isReadyToMate() && other.isReadyToMate()
+            && checkExtraBreedConditions(other);
+    }
+
+    @Override
+    public boolean checkExtraBreedConditions(TFCAnimalProperties otherAnimal)
+    {
+        if (otherAnimal instanceof BactrianCamel otherCamel)
+        {
+            return vanillaParentingCheck(this) && vanillaParentingCheck(otherCamel);
+        }
+        return false;
     }
 
     @Override
@@ -280,12 +268,6 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
     }
 
     @Override
-    protected float getBlockSpeedFactor()
-    {
-        return Helpers.isBlock(level().getBlockState(blockPosition().below()), Tags.Blocks.SANDS) ? 1.15F : super.getBlockSpeedFactor();
-    }
-
-    @Override
     public MammalConfig getMammalConfig()
     {
         return mammalConfig;
@@ -337,6 +319,22 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
     }
 
     @Override
+    public void addAdditionalSaveData(CompoundTag nbt)
+    {
+        super.addAdditionalSaveData(nbt);
+        saveCommonAnimalData(nbt);
+        nbt.putLong("produced", getProducedTick());
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag nbt)
+    {
+        super.readAdditionalSaveData(nbt);
+        readCommonAnimalData(nbt);
+        setProducedTick(nbt.getLong("produced"));
+    }
+
+    @Override
     public boolean isBaby()
     {
         return getAgeType() == Age.CHILD;
@@ -357,7 +355,7 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
     @Override
     public @Nullable BactrianCamel getBreedOffspring(ServerLevel level, AgeableMob other)
     {
-        final AbstractCamel mob = super.getBreedOffspring(level, other);
+        final AgeableMob mob = super.getBreedOffspring(level, other);
         return mob instanceof BactrianCamel camel ? camel : null;
     }
 
@@ -392,6 +390,16 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
     public float getWalkTargetValue(BlockPos pos, LevelReader level)
     {
         return level.getBlockState(pos.below()).is(TFCTags.Blocks.BUSH_PLANTABLE_ON) ? 10.0F : level.getPathfindingCostFromLightLevels(pos);
+    }
+
+    @Override
+    protected float getBlockSpeedFactor()
+    {
+        if ((Helpers.isBlock(level().getBlockState(blockPosition().below()), Tags.Blocks.SANDS)))
+        {
+            return 1.15F;
+        }
+        else return super.getBlockSpeedFactor();
     }
 
     @Override
