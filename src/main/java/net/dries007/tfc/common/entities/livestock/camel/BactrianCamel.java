@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import net.dries007.tfc.common.TFCTags;
@@ -44,10 +46,12 @@ import net.dries007.tfc.common.entities.livestock.Age;
 import net.dries007.tfc.common.entities.livestock.CommonAnimalData;
 import net.dries007.tfc.common.entities.livestock.MammalProperties;
 import net.dries007.tfc.common.items.TFCItems;
+import net.dries007.tfc.config.TFCConfig;
 import net.dries007.tfc.config.animals.AnimalConfig;
 import net.dries007.tfc.config.animals.MammalConfig;
 import net.dries007.tfc.config.animals.ProducingMammalConfig;
 import net.dries007.tfc.mixin.accessor.CamelAccessor;
+import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.events.AnimalProductEvent;
 
@@ -235,7 +239,7 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
                 {
                     tameWithName(player);
                 }
-                if (this.getPassengers().size() <= 1)
+                if (canAddPassenger(player))
                 {
                     this.doPlayerRide(player);
                 }
@@ -246,9 +250,15 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
     }
 
     @Override
+    protected boolean canAddPassenger(Entity passenger)
+    {
+        return this.getPassengers().size() <= 1;
+    }
+
+    @Override
     protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick)
     {
-        float f = -0.1F;
+        float f = 0.0F;
         float f1 = (float) (this.isRemoved() ? 0.01F : ((CamelAccessor) this).invoke$getBodyAnchorAnimationYOffset(true, 0.0F, dimensions, partialTick));
         return new Vec3(0.0, (double) f1, (double) (f * partialTick)).yRot(-this.getYRot() * (float) (Math.PI / 180.0));
     }
@@ -269,6 +279,20 @@ public class BactrianCamel extends AbstractCamel implements MammalProperties, IS
         }
         setPregnantTime(-1L);
         return spawnData;
+    }
+
+    @Override
+    protected float getBlockSpeedFactor()
+    {
+        if (TFCConfig.SERVER.enableSnowSlowEntities.get() && level().getBlockState(BlockPos.containing(position())).is(BlockTags.SNOW))
+        {
+            /*
+             * TODO: TEST MORE CASES, SEE IF THERE IS A BETTER WAY TO DO THIS
+             * This has to use an unusual value because SnowLayerBlocks use a different method for slowing entities
+             */
+            return 1.8F;
+        }
+        return Helpers.isBlock(level().getBlockState(blockPosition().below()), Tags.Blocks.SANDS) ? 1.2F : super.getBlockSpeedFactor();
     }
 
     @Override

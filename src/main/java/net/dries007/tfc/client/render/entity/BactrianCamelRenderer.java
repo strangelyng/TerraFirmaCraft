@@ -8,7 +8,6 @@ import net.minecraft.world.entity.animal.camel.Camel;
 import net.dries007.tfc.client.RenderHelpers;
 import net.dries007.tfc.client.model.entity.HierarchicalAnimatedModel;
 import net.dries007.tfc.common.entities.livestock.Age;
-import net.dries007.tfc.common.entities.livestock.TFCAnimalProperties;
 import net.dries007.tfc.common.entities.livestock.camel.AbstractCamel;
 
 public class BactrianCamelRenderer<T extends Camel, M extends HierarchicalAnimatedModel<T>> extends MobRenderer<T, M>
