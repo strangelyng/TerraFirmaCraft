@@ -32,6 +32,14 @@
     "#tfc:in_biome/top_layer_modification"
   ],
   "spawners": {
+    "ambient": [
+      {
+        "type": "minecraft:bat",
+        "weight": 10,
+        "minCount": 8,
+        "maxCount": 8
+      }
+    ],
     "monster": [
       {
         "type": "minecraft:spider",

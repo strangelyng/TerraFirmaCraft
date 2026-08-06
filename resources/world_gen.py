@@ -2043,6 +2043,10 @@ LAND_CREATURES: Dict[str, Dict[str, Any]] = {
     'frog': spawner('tfc:frog', min_count=2, max_count=4),
 }
 
+AMBIENT: Dict[str, Dict[str, Any]] = {
+    'bat': spawner('minecraft:bat', weight=10, min_count=8, max_count=8),
+}
+
 VANILLA_MONSTERS: Dict[str, Dict[str, Any]] = {
     'spider': spawner('minecraft:spider', weight=100, min_count=4, max_count=4),
     'zombie': spawner('minecraft:zombie', weight=95, min_count=4, max_count=4),
@@ -2128,6 +2132,7 @@ def biome(rm: ResourceManager, name: str, category: str, boulders: bool = False,
         spawners['water_ambient'] = [entity for entity in LAKE_AMBIENT.values()]
     if 'salt_marsh' == name or 'tower_karst_bay' == name:
         spawners['water_ambient'] = [entity for entity in SALT_MARSH_AMBIENT.values()]
+    spawners['ambient'] = [entity for entity in AMBIENT.values()]
     spawners['monster'] = [entity for entity in VANILLA_MONSTERS.values()]
 
     if reef_features:
