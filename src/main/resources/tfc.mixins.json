@@ -5,6 +5,7 @@
   "plugin": "net.dries007.tfc.mixin.plugin.TFCMixinPlugin",
   "mixins": [
     "AbstractSkeletonMixin",
+    "BatMixin",
     "BiomeMixin",
     "ChunkMapMixin",
     "DedicatedServerPropertiesMixin",
